@@ -1,4 +1,4 @@
-# Sales Data Visualization Dashboard
+# Sales Data Visualization
 
 ## Tools Used
 - Python
