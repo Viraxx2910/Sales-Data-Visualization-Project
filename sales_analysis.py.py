@@ -19,7 +19,8 @@ print(df.columns.tolist())
 # Convert Order Date column into datetime format
 df['Order Date'] = pd.to_datetime(
     df['Order Date'],
-    dayfirst=True
+    dayfirst=True,
+    errors='coerce'
 )
 
 print("\nDATE COLUMN CONVERTED SUCCESSFULLY")
@@ -106,6 +107,12 @@ if 'Quantity' in df.columns:
     print("\nTOTAL QUANTITY SOLD:")
     print(total_quantity)
     
+df.to_csv(
+    r"C:\Users\admin\Documents\Sales_Data_Visualization_Project\Dataset\sales_data.csv",
+    index=False
+)
+
+print("\nCLEANED DATASET SAVED SUCCESSFULLY!")    
 # -----------------------------------
 # MONTHLY SALES TREND CHART
 # -----------------------------------
@@ -192,37 +199,34 @@ plt.show()
 # INTERACTIVE REGION-WISE SALES CHART
 # -----------------------------------
 
+# Group data
+region_category_sales = (
+    df.groupby(['Region', 'Category'])['Sales']
+      .sum()
+      .reset_index()
+)
+
+# Plot Interactive Chart
 interactive_chart = px.bar(
-    df,
+    region_category_sales,
     x='Region',
     y='Sales',
     color='Category',
+    barmode='group',
+    text_auto=True,
     title='Interactive Region-wise Sales'
 )
+
 interactive_chart.show()
 
-# -----------------------------------
-# BUSINESS INSIGHTS
-# -----------------------------------
-
+# Business Insights
 print("\n========== BUSINESS INSIGHTS ==========")
 
-# Highest Sales Region
-top_region = region_sales.idxmax()
+region_sales = df.groupby('Region')['Sales'].sum()
+category_sales = df.groupby('Category')['Sales'].sum()
+top_products = df.groupby('Product Name')['Sales'].sum()
 
-print(f"\nHighest Sales Region: {top_region}")
-
-# Best Category
-top_category = category_sales.idxmax()
-
-print(f"Best Performing Category: {top_category}")
-
-# Best Product
-best_product = top_products.idxmax()
-
-print(f"Top Selling Product: {best_product}")
-
-# Average Sales
-average_sales = df['Sales'].mean()
-
-print(f"Average Sales: {round(average_sales, 2)}")
+print(f"Highest Sales Region : {region_sales.idxmax()}")
+print(f"Best Category        : {category_sales.idxmax()}")
+print(f"Top Selling Product  : {top_products.idxmax()}")
+print(f"Average Sales        : {df['Sales'].mean():.2f}")
