@@ -218,7 +218,9 @@ interactive_chart = px.bar(
 )
 
 interactive_chart.show()
-
+interactive_chart.write_image(
+    r"C:\Users\admin\Documents\Sales_Data_Visualization_Project\Screenshots\interactive_region_sales.png"
+)
 # Business Insights
 print("\n========== BUSINESS INSIGHTS ==========")
 
